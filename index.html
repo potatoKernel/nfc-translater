@@ -1,540 +1,64 @@
-```html
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-  <title>NFC UID Converter</title>
-
-  <style>
-    * {
-      box-sizing: border-box;
-    }
-
-    body {
-      margin: 0;
-      min-height: 100vh;
-      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif;
-      background: linear-gradient(135deg, #0f172a, #1e293b);
-      color: #f8fafc;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      padding: 20px;
-    }
-
-    .container {
-      width: 100%;
-      max-width: 650px;
-    }
-
-    .card {
-      background: rgba(15, 23, 42, 0.95);
-      border: 1px solid rgba(148, 163, 184, 0.2);
-      border-radius: 24px;
-      padding: 35px;
-      box-shadow: 0 25px 70px rgba(0, 0, 0, 0.35);
-    }
-
-    h1 {
-      margin: 0 0 8px;
-      font-size: 32px;
-      text-align: center;
-    }
-
-    .subtitle {
-      text-align: center;
-      color: #94a3b8;
-      margin-bottom: 30px;
-      line-height: 1.5;
-    }
-
-    .drop-zone {
-      border: 2px dashed #64748b;
-      border-radius: 18px;
-      padding: 45px 20px;
-      text-align: center;
-      cursor: pointer;
-      transition: 0.2s ease;
-      background: rgba(30, 41, 59, 0.5);
-    }
-
-    .drop-zone:hover,
-    .drop-zone.dragover {
-      border-color: #60a5fa;
-      background: rgba(59, 130, 246, 0.1);
-      transform: scale(1.01);
-    }
-
-    .drop-icon {
-      font-size: 48px;
-      margin-bottom: 12px;
-    }
-
-    .drop-title {
-      font-size: 19px;
-      font-weight: 600;
-      margin-bottom: 8px;
-    }
-
-    .drop-description {
-      color: #94a3b8;
-      font-size: 14px;
-    }
-
-    input[type="file"] {
-      display: none;
-    }
-
-    .result {
-      display: none;
-      margin-top: 25px;
-    }
-
-    .result.show {
-      display: block;
-    }
-
-    .result-box {
-      background: #020617;
-      border: 1px solid #334155;
-      border-radius: 15px;
-      padding: 20px;
-      margin-bottom: 12px;
-    }
-
-    .label {
-      color: #94a3b8;
-      font-size: 13px;
-      margin-bottom: 7px;
-      text-transform: uppercase;
-      letter-spacing: 0.08em;
-    }
-
-    .value {
-      font-family: "SFMono-Regular", Consolas, monospace;
-      font-size: 22px;
-      word-break: break-all;
-    }
-
-    .decimal-value {
-      font-size: 30px;
-      font-weight: 700;
-      color: #60a5fa;
-    }
-
-    .copy-button {
-      width: 100%;
-      border: 0;
-      border-radius: 12px;
-      padding: 13px;
-      margin-top: 8px;
-      background: #2563eb;
-      color: white;
-      font-size: 16px;
-      font-weight: 600;
-      cursor: pointer;
-      transition: 0.2s;
-    }
-
-    .copy-button:hover {
-      background: #3b82f6;
-    }
-
-    .copy-button:active {
-      transform: scale(0.98);
-    }
-
-    .error {
-      display: none;
-      margin-top: 20px;
-      padding: 15px;
-      border-radius: 12px;
-      background: rgba(239, 68, 68, 0.12);
-      border: 1px solid rgba(239, 68, 68, 0.4);
-      color: #fca5a5;
-      line-height: 1.5;
-    }
-
-    .error.show {
-      display: block;
-    }
-
-    .info {
-      margin-top: 25px;
-      padding: 15px;
-      border-radius: 12px;
-      background: rgba(30, 41, 59, 0.6);
-      color: #94a3b8;
-      font-size: 13px;
-      line-height: 1.6;
-    }
-
-    .info strong {
-      color: #e2e8f0;
-    }
-
-    .footer {
-      text-align: center;
-      margin-top: 20px;
-      color: #64748b;
-      font-size: 12px;
-    }
-
-    @media (max-width: 500px) {
-      .card {
-        padding: 25px 18px;
-      }
-
-      h1 {
-        font-size: 26px;
-      }
-
-      .decimal-value {
-        font-size: 25px;
-      }
-    }
-  </style>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1"><meta name="theme-color" content="#0b1020">
+<title>NFC Desk — UID Converter</title>
+<style>
+:root{color-scheme:dark;--bg:#0b1020;--panel:#111a2e;--line:#24324b;--muted:#93a4bf;--text:#eef4ff;--accent:#78a9ff;--accent2:#5d8dff;--green:#76e0bb}
+*{box-sizing:border-box}body{margin:0;background:radial-gradient(ellipse at 15% 0%,#172849 0,transparent 42%),var(--bg);color:var(--text);font:15px/1.5 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-serif;min-height:100vh}button,input{font:inherit}button{cursor:pointer}.app{max-width:1180px;margin:auto;padding:32px 22px 50px}.topbar{display:flex;align-items:center;justify-content:space-between;gap:16px;margin-bottom:30px}.brand{display:flex;align-items:center;gap:13px}.logo{display:grid;place-items:center;width:45px;height:45px;border-radius:14px;background:linear-gradient(135deg,#78a9ff,#7b7aff);color:#081125;font-size:24px}.brand h1{font-size:20px;letter-spacing:-.5px;margin:0}.brand p{margin:2px 0 0;color:var(--muted);font-size:13px}.top-actions{display:flex;gap:10px;flex-wrap:wrap}.btn{border:1px solid var(--line);border-radius:11px;padding:10px 15px;background:#17233a;color:var(--text);font-weight:650;transition:.18s}.btn:hover{filter:brightness(1.15);transform:translateY(-1px)}.btn.primary{background:var(--accent2);border-color:transparent;color:#fff}.btn.subtle{background:transparent}.hero{margin-bottom:24px}.eyebrow{color:var(--accent);font-weight:750;text-transform:uppercase;letter-spacing:.14em;font-size:11px}.hero h2{font-size:clamp(28px,4vw,40px);letter-spacing:-1.4px;line-height:1.12;margin:8px 0 10px}.hero p{color:var(--muted);margin:0;max-width:650px}.layout{display:grid;grid-template-columns:minmax(0,1.15fr) minmax(310px,.85fr);gap:20px;align-items:start}.panel{background:linear-gradient(180deg,#121c31,#10182a);border:1px solid var(--line);border-radius:19px;padding:22px;box-shadow:0 18px 50px #00000018}.panel-head{display:flex;align-items:flex-start;justify-content:space-between;gap:12px;margin-bottom:19px}.panel h3{margin:0;font-size:17px;letter-spacing:-.3px}.panel-head p{margin:4px 0 0;color:var(--muted);font-size:13px}.pill{font-size:11px;color:var(--green);border:1px solid #2b6558;background:#12362f;padding:4px 8px;border-radius:99px;white-space:nowrap}.dropzone{border:1.5px dashed #425675;border-radius:15px;background:#0d1629;padding:27px 16px;text-align:center;transition:.18s;cursor:pointer}.dropzone:hover,.dropzone.drag{border-color:var(--accent);background:#14223b}.dropicon{width:48px;height:48px;margin:0 auto 10px;display:grid;place-items:center;border-radius:15px;background:#1c2d4b;color:var(--accent);font-size:23px}.dropzone strong{display:block;font-size:15px}.dropzone span{display:block;color:var(--muted);font-size:13px;margin-top:5px}#fileInput{display:none}.manual{margin-top:19px}.label{display:block;font-size:12px;font-weight:700;color:#bdc9dc;margin-bottom:7px}.input{width:100%;border:1px solid #2b3a54;background:#0b1324;color:var(--text);border-radius:10px;padding:11px 12px;outline:none}.input:focus{border-color:var(--accent);box-shadow:0 0 0 3px #78a9ff18}.manual-row{display:grid;grid-template-columns:1fr auto;gap:9px}.hint{font-size:12px;color:var(--muted);margin:8px 0 0}.error{display:none;margin-top:13px;padding:11px 12px;border-radius:10px;background:#351b29;border:1px solid #6b3448;color:#ffc2c2;font-size:13px}.error.show{display:block}.result{display:none;margin-top:19px;border-top:1px solid var(--line);padding-top:19px}.result.show{display:block}.result-top{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:14px}.result-top small{color:var(--muted)}.result-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}.value-card{background:#0b1324;border:1px solid #25334b;border-radius:12px;padding:13px;min-width:0}.value-card.wide{grid-column:1/-1}.value-label{font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:.09em;margin-bottom:6px}.value{font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;overflow-wrap:anywhere;font-size:15px}.value.big{font-size:clamp(20px,3vw,27px);font-weight:800;color:var(--accent);letter-spacing:-.5px}.value-line{display:flex;align-items:center;justify-content:space-between;gap:10px}.copy-mini{border:1px solid #30415e;background:#17253d;color:#cfe0ff;border-radius:8px;padding:6px 9px;font-size:12px;flex-shrink:0}.save-row{display:grid;grid-template-columns:1fr auto;gap:9px;margin-top:13px}.history-panel{min-height:360px}.search{position:relative;margin-bottom:15px}.search .input{padding-left:37px}.search-icon{position:absolute;left:12px;top:10px;color:var(--muted)}.history-list{display:flex;flex-direction:column;gap:9px}.history-item{border:1px solid #273650;background:#0d1628;border-radius:13px;padding:13px;display:grid;grid-template-columns:minmax(0,1fr) auto;gap:10px;align-items:center}.history-item:hover{border-color:#405b83}.history-item.selected{border-color:#6798ff;background:#14213a}.card-name{font-weight:750;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.card-meta{font-size:12px;color:var(--muted);margin-top:3px}.card-uid{font:12px ui-monospace,SFMono-Regular,Menlo,monospace;color:#b9c9e3;margin-top:7px;overflow-wrap:anywhere}.item-actions{display:flex;gap:6px}.icon-btn{display:grid;place-items:center;width:33px;height:33px;border-radius:9px;border:1px solid #2b3b56;background:#17233a;color:#d8e5fb}.icon-btn:hover{background:#233754}.empty{text-align:center;border:1px dashed #30415a;border-radius:13px;padding:28px 15px;color:var(--muted)}.empty .empty-icon{font-size:28px;margin-bottom:6px}.empty strong{display:block;color:#dbe6f8;margin-bottom:3px}.footer{display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap;margin-top:20px;color:#7788a5;font-size:12px}.toast{position:fixed;bottom:22px;left:50%;transform:translate(-50%,15px);opacity:0;pointer-events:none;background:#eaf2ff;color:#10203c;border-radius:11px;padding:11px 16px;font-weight:700;box-shadow:0 12px 35px #0006;transition:.2s;z-index:10}.toast.show{opacity:1;transform:translate(-50%,0)}.modal-backdrop{position:fixed;inset:0;background:#030713b8;display:none;place-items:center;padding:18px;z-index:20}.modal-backdrop.show{display:grid}.modal{width:min(100%,420px);background:#121c31;border:1px solid #34445f;border-radius:18px;padding:22px;box-shadow:0 25px 80px #0008}.modal h3{margin:0 0 7px}.modal p{color:var(--muted);font-size:13px;margin:0 0 17px}.modal-actions{display:flex;justify-content:flex-end;gap:9px;margin-top:18px}@media(max-width:850px){.layout{grid-template-columns:1fr}.history-panel{min-height:0}.topbar{align-items:flex-start}}@media(max-width:520px){.app{padding:22px 13px 35px}.topbar{flex-direction:column}.top-actions{width:100%}.top-actions .btn{flex:1}.panel{padding:17px}.result-grid{grid-template-columns:1fr}.value-card.wide{grid-column:auto}.hero h2{letter-spacing:-.8px}.history-item{padding:11px}.item-actions{flex-direction:column}}
+</style>
 </head>
-
 <body>
-
-  <div class="container">
-
-    <div class="card">
-
-      <h1>🔑 NFC UID Converter</h1>
-
-      <div class="subtitle">
-        Convert a Flipper Zero <code>.nfc</code> file's UID into the
-        decimal identifier automatically.
-      </div>
-
-      <label class="drop-zone" id="dropZone" for="fileInput">
-
-        <div class="drop-icon">📄</div>
-
-        <div class="drop-title">
-          Drop your .nfc file here
-        </div>
-
-        <div class="drop-description">
-          or click to choose a file
-        </div>
-
-      </label>
-
-      <input
-        type="file"
-        id="fileInput"
-        accept=".nfc,text/plain"
-      >
-
-      <div class="error" id="error"></div>
-
-      <div class="result" id="result">
-
-        <div class="result-box">
-          <div class="label">Original UID</div>
-          <div class="value" id="originalUid"></div>
-        </div>
-
-        <div class="result-box">
-          <div class="label">Reversed UID</div>
-          <div class="value" id="reversedUid"></div>
-        </div>
-
-        <div class="result-box">
-          <div class="label">Decimal ID</div>
-          <div class="value decimal-value" id="decimalId"></div>
-
-          <button
-            class="copy-button"
-            id="copyButton"
-            type="button"
-          >
-            Copy Decimal ID
-          </button>
-        </div>
-
-      </div>
-
-      <div class="info">
-        <strong>How it works:</strong><br>
-        This tool finds the <code>UID:</code> line in your Flipper Zero
-        NFC dump, reverses the UID bytes, and converts the result from
-        hexadecimal to decimal.
-        <br><br>
-        <strong>Privacy:</strong> Your file is processed entirely in
-        your browser. Nothing is uploaded to a server.
-      </div>
-
-      <div class="footer">
-        NFC UID Converter • Runs locally in your browser
-      </div>
-
-    </div>
-
-  </div>
-
-  <script>
-    const dropZone = document.getElementById("dropZone");
-    const fileInput = document.getElementById("fileInput");
-
-    const result = document.getElementById("result");
-    const error = document.getElementById("error");
-
-    const originalUid = document.getElementById("originalUid");
-    const reversedUid = document.getElementById("reversedUid");
-    const decimalId = document.getElementById("decimalId");
-
-    const copyButton = document.getElementById("copyButton");
-
-
-    /*
-     * Convert a Flipper Zero UID into the decimal identifier.
-     *
-     * Example:
-     *
-     * UID: 85 B5 E3 FA
-     *
-     * Reverse:
-     *
-     * FA E3 B5 85
-     *
-     * Hex:
-     *
-     * FAE3B585
-     *
-     * Decimal:
-     *
-     * 4209227141
-     */
-    function convertUID(uid) {
-
-      // Remove spaces, tabs, etc.
-      const cleanUID = uid
-        .replace(/\s/g, "")
-        .toUpperCase();
-
-      // This version expects a 4-byte UID.
-      if (!/^[0-9A-F]{8}$/.test(cleanUID)) {
-        throw new Error(
-          "The UID must contain exactly 4 hexadecimal bytes."
-        );
-      }
-
-      // Split into individual bytes.
-      const bytes = [
-        cleanUID.substring(0, 2),
-        cleanUID.substring(2, 4),
-        cleanUID.substring(4, 6),
-        cleanUID.substring(6, 8)
-      ];
-
-      // Reverse the byte order.
-      const reversed = [
-        bytes[3],
-        bytes[2],
-        bytes[1],
-        bytes[0]
-      ].join("");
-
-      // Convert to a JavaScript BigInt so large unsigned
-      // 32-bit values are handled correctly.
-      const decimal = BigInt("0x" + reversed).toString(10);
-
-      return {
-        original: bytes.join(" "),
-        reversed: [
-          bytes[3],
-          bytes[2],
-          bytes[1],
-          bytes[0]
-        ].join(" "),
-        decimal: decimal
-      };
-    }
-
-
-    /*
-     * Read the UID line from a Flipper Zero .nfc file.
-     */
-    function extractUID(text) {
-
-      const lines = text.split(/\r?\n/);
-
-      for (const line of lines) {
-
-        const match = line.match(
-          /^\s*UID\s*:\s*(.+?)\s*$/
-        );
-
-        if (match) {
-          return match[1];
-        }
-      }
-
-      throw new Error(
-        "No UID line was found in this NFC file."
-      );
-    }
-
-
-    /*
-     * Process the selected file.
-     */
-    async function processFile(file) {
-
-      hideError();
-
-      result.classList.remove("show");
-
-      if (!file) {
-        return;
-      }
-
-      try {
-
-        const text = await file.text();
-
-        const uid = extractUID(text);
-
-        const converted = convertUID(uid);
-
-        originalUid.textContent = converted.original;
-
-        reversedUid.textContent = converted.reversed;
-
-        decimalId.textContent = converted.decimal;
-
-        result.classList.add("show");
-
-      } catch (err) {
-
-        showError(
-          err.message ||
-          "Something went wrong while reading the file."
-        );
-      }
-    }
-
-
-    /*
-     * Show an error.
-     */
-    function showError(message) {
-
-      error.textContent = "⚠️ " + message;
-
-      error.classList.add("show");
-    }
-
-
-    /*
-     * Hide the error.
-     */
-    function hideError() {
-
-      error.textContent = "";
-
-      error.classList.remove("show");
-    }
-
-
-    /*
-     * Normal file selection.
-     */
-    fileInput.addEventListener("change", function() {
-
-      if (this.files.length > 0) {
-        processFile(this.files[0]);
-      }
-
-    });
-
-
-    /*
-     * Drag & drop.
-     */
-
-    dropZone.addEventListener("dragover", function(event) {
-
-      event.preventDefault();
-
-      dropZone.classList.add("dragover");
-
-    });
-
-
-    dropZone.addEventListener("dragleave", function() {
-
-      dropZone.classList.remove("dragover");
-
-    });
-
-
-    dropZone.addEventListener("drop", function(event) {
-
-      event.preventDefault();
-
-      dropZone.classList.remove("dragover");
-
-      const files = event.dataTransfer.files;
-
-      if (files.length > 0) {
-        processFile(files[0]);
-      }
-
-    });
-
-
-    /*
-     * Copy the decimal ID.
-     */
-    copyButton.addEventListener("click", async function() {
-
-      const value = decimalId.textContent;
-
-      try {
-
-        await navigator.clipboard.writeText(value);
-
-        const oldText = copyButton.textContent;
-
-        copyButton.textContent = "✓ Copied!";
-
-        setTimeout(function() {
-          copyButton.textContent = oldText;
-        }, 1500);
-
-      } catch (err) {
-
-        // Fallback for browsers where Clipboard API
-        // isn't available.
-        const textarea = document.createElement("textarea");
-
-        textarea.value = value;
-
-        document.body.appendChild(textarea);
-
-        textarea.select();
-
-        document.execCommand("copy");
-
-        textarea.remove();
-
-        copyButton.textContent = "✓ Copied!";
-
-        setTimeout(function() {
-          copyButton.textContent = "Copy Decimal ID";
-        }, 1500);
-      }
-
-    });
-  </script>
-
+<div class="app">
+<header class="topbar"><div class="brand"><div class="logo" aria-hidden="true">⌁</div><div><h1>NFC Desk</h1><p>Your local UID workspace</p></div></div><div class="top-actions"><button class="btn subtle" id="exportBtn" type="button">Export history</button><button class="btn primary" id="newCardBtn" type="button">＋ New card</button></div></header>
+<section class="hero"><div class="eyebrow">Personal card library</div><h2>Keep your cards organized.</h2><p>Convert a Flipper Zero NFC dump, give it a name, and keep a searchable history in this browser.</p></section>
+<main class="layout">
+<section class="panel" id="converterPanel">
+<div class="panel-head"><div><h3 id="converterTitle">Add a card</h3><p>Drop a file or enter a UID manually.</p></div><span class="pill">● Local only</span></div>
+<label class="dropzone" id="dropZone" for="fileInput"><div class="dropicon">⇧</div><strong>Drop your .nfc file here</strong><span>or click to browse your files</span></label><input id="fileInput" type="file" accept=".nfc,text/plain">
+<div class="manual"><label class="label" for="uidInput">UID (4 bytes)</label><div class="manual-row"><input class="input" id="uidInput" type="text" placeholder="85 B5 E3 FA" autocomplete="off" spellcheck="false"><button class="btn" id="convertBtn" type="button">Convert</button></div><p class="hint">Paste a 4-byte UID, with or without spaces. This converter uses reversed byte order.</p></div>
+<div class="error" id="errorBox" role="alert"></div>
+<div class="result" id="result"><div class="result-top"><div><h3>Conversion result</h3><small id="sourceLabel">UID ready</small></div><span class="pill">Ready to save</span></div><div class="result-grid"><div class="value-card"><div class="value-label">Original UID</div><div class="value" id="originalValue">—</div></div><div class="value-card"><div class="value-label">Reversed UID</div><div class="value" id="reversedValue">—</div></div><div class="value-card wide"><div class="value-label">Decimal ID</div><div class="value-line"><div class="value big" id="decimalValue">—</div><button class="copy-mini" id="copyDecimalBtn" type="button">Copy</button></div></div></div><div class="save-row"><input class="input" id="cardNameInput" type="text" maxlength="80" placeholder="Card name (e.g. Library card)"><button class="btn primary" id="saveCardBtn" type="button">Save card</button></div><p class="hint">Saving adds this card to the history on this browser. You can rename it later.</p></div>
+</section>
+<section class="panel history-panel"><div class="panel-head"><div><h3>Card history</h3><p id="historyCount">0 saved cards</p></div><button class="btn subtle" id="clearSearchBtn" type="button" title="Clear search">Clear</button></div><div class="search"><span class="search-icon">⌕</span><input class="input" id="searchInput" type="search" placeholder="Search names or UIDs…" aria-label="Search card history"></div><div class="history-list" id="historyList"></div></section>
+</main><footer class="footer"><span>Runs in your browser · No account required</span><span>History is stored on this device and browser.</span></footer>
+</div>
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
+<div class="modal-backdrop" id="renameModal" role="dialog" aria-modal="true" aria-labelledby="renameTitle"><div class="modal"><h3 id="renameTitle">Rename card</h3><p>Choose a label to help you recognize this saved entry.</p><label class="label" for="renameInput">Card name</label><input class="input" id="renameInput" maxlength="80" placeholder="Enter a card name"><div class="modal-actions"><button class="btn" id="cancelRenameBtn" type="button">Cancel</button><button class="btn primary" id="confirmRenameBtn" type="button">Save name</button></div></div></div>
+<script>
+(() => {
+"use strict";
+const STORAGE_KEY="nfc-desk-history-v1", $=id=>document.getElementById(id);
+let currentConversion=null,editingId=null,renameId=null,toastTimer=null,history=loadHistory();
+function loadHistory(){try{const p=JSON.parse(localStorage.getItem(STORAGE_KEY)||"[]");return Array.isArray(p)?p.filter(x=>x&&typeof x.id==="string"&&typeof x.uid==="string"&&typeof x.decimal==="string"):[]}catch(_){return[]}}
+function persistHistory(){try{localStorage.setItem(STORAGE_KEY,JSON.stringify(history));return true}catch(_){showToast("Could not save. Browser storage may be full or disabled.");return false}}
+function convertUID(raw){const clean=raw.replace(/[\s:,-]/g,"").toUpperCase();if(!/^[0-9A-F]{8}$/.test(clean))throw Error("Enter a valid 4-byte UID, such as 85 B5 E3 FA.");const bytes=clean.match(/.{2}/g),rev=[...bytes].reverse();return{uid:bytes.join(" "),reversed:rev.join(" "),decimal:BigInt("0x"+rev.join("")).toString(10),hex:clean}}
+function extractUID(text){const m=text.match(/^\s*UID\s*:\s*([0-9a-fA-F\s:,-]+)\s*$/mi);if(!m)throw Error("No UID line was found in that file.");return m[1]}
+function showError(msg){$("errorBox").textContent=msg;$("errorBox").classList.add("show")}function hideError(){$("errorBox").textContent="";$("errorBox").classList.remove("show")}
+function showToast(msg){$("toast").textContent=msg;$("toast").classList.add("show");clearTimeout(toastTimer);toastTimer=setTimeout(()=>$("toast").classList.remove("show"),2200)}
+function resetForm(){currentConversion=null;editingId=null;$("converterTitle").textContent="Add a card";$("uidInput").value="";$("cardNameInput").value="";$("fileInput").value="";$("result").classList.remove("show");hideError()}
+function renderConversion(c,source="UID entered manually"){currentConversion=c;$("uidInput").value=c.uid;$("originalValue").textContent=c.uid;$("reversedValue").textContent=c.reversed;$("decimalValue").textContent=c.decimal;$("sourceLabel").textContent=source;$("result").classList.add("show");hideError()}
+async function processFile(file){if(!file)return;resetForm();try{const c=convertUID(extractUID(await file.text()));renderConversion(c,"Read from "+file.name);$("cardNameInput").value=file.name.replace(/\.nfc$/i,"");showToast("UID extracted successfully")}catch(e){showError(e.message||"Could not read this file.")}}
+function saveCurrentCard(){if(!currentConversion){try{renderConversion(convertUID($("uidInput").value))}catch(e){showError(e.message);return}}const name=$("cardNameInput").value.trim()||"Unnamed card",now=new Date().toISOString(),old=editingId?history.find(c=>c.id===editingId):null,card={id:editingId||(crypto.randomUUID?crypto.randomUUID():String(Date.now())+Math.random().toString(16).slice(2)),name,uid:currentConversion.uid,reversed:currentConversion.reversed,decimal:currentConversion.decimal,hex:currentConversion.hex,createdAt:old?old.createdAt:now,updatedAt:now};if(old)history=history.map(c=>c.id===editingId?card:c);else history.unshift(card);if(persistHistory()){renderHistory();showToast(old?"Card updated":"Card saved to history");resetForm()}}
+function esc(v){return String(v).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]))}
+function renderHistory(){const q=$("searchInput").value.trim().toLowerCase(),filtered=history.filter(c=>c.name.toLowerCase().includes(q)||c.uid.toLowerCase().includes(q)||c.decimal.includes(q));$("historyCount").textContent=history.length+(history.length===1?" saved card":" saved cards");const list=$("historyList");if(!filtered.length){list.innerHTML=history.length?'<div class="empty"><div class="empty-icon">⌕</div><strong>No matches found</strong>Try another name or UID.</div>':'<div class="empty"><div class="empty-icon">▱</div><strong>No cards saved yet</strong>Convert a UID, name it, then press Save card.</div>';return}list.innerHTML=filtered.map(c=>`<article class="history-item ${editingId===c.id?"selected":""}"><div><div class="card-name" title="${esc(c.name)}">${esc(c.name)}</div><div class="card-meta">${esc(c.decimal)}</div><div class="card-uid">${esc(c.uid)}</div></div><div class="item-actions"><button class="icon-btn" type="button" data-action="load" data-id="${esc(c.id)}" title="Load card" aria-label="Load ${esc(c.name)}">↗</button><button class="icon-btn" type="button" data-action="rename" data-id="${esc(c.id)}" title="Rename card" aria-label="Rename ${esc(c.name)}">✎</button><button class="icon-btn" type="button" data-action="copy" data-id="${esc(c.id)}" title="Copy decimal ID" aria-label="Copy ID for ${esc(c.name)}">⧉</button><button class="icon-btn" type="button" data-action="delete" data-id="${esc(c.id)}" title="Delete card" aria-label="Delete ${esc(c.name)}">×</button></div></article>`).join("")}
+function loadCard(id){const c=history.find(x=>x.id===id);if(!c)return;editingId=c.id;$("converterTitle").textContent="Edit saved card";$("cardNameInput").value=c.name;renderConversion({uid:c.uid,reversed:c.reversed,decimal:c.decimal,hex:c.hex||c.uid.replace(/\s/g,"")},"Loaded from card history");$("converterPanel").scrollIntoView({behavior:"smooth",block:"start"});renderHistory()}
+function openRename(id){const c=history.find(x=>x.id===id);if(!c)return;renameId=id;$("renameInput").value=c.name;$("renameModal").classList.add("show");$("renameInput").focus();$("renameInput").select()}
+function closeRename(){$("renameModal").classList.remove("show");renameId=null}
+function confirmRename(){const c=history.find(x=>x.id===renameId);if(!c)return closeRename();const name=$("renameInput").value.trim();if(!name){$("renameInput").focus();return}c.name=name;c.updatedAt=new Date().toISOString();if(persistHistory()){renderHistory();if(editingId===c.id)$("cardNameInput").value=name;showToast("Card renamed")}closeRename()}
+async function copyText(value){try{if(navigator.clipboard&&window.isSecureContext)await navigator.clipboard.writeText(value);else{const t=document.createElement("textarea");t.value=value;t.style.position="fixed";t.style.opacity="0";document.body.appendChild(t);t.select();const ok=document.execCommand("copy");t.remove();if(!ok)throw Error()}showToast("Decimal ID copied")}catch(_){showToast("Could not copy automatically. Select the ID and copy it.")}}
+$("newCardBtn").addEventListener("click",()=>{resetForm();$("converterPanel").scrollIntoView({behavior:"smooth",block:"start"});$("uidInput").focus()});
+$("convertBtn").addEventListener("click",()=>{try{renderConversion(convertUID($("uidInput").value))}catch(e){showError(e.message)}});
+$("uidInput").addEventListener("keydown",e=>{if(e.key==="Enter")$("convertBtn").click()});
+$("saveCardBtn").addEventListener("click",saveCurrentCard);$("copyDecimalBtn").addEventListener("click",()=>{if(currentConversion)copyText(currentConversion.decimal)});
+$("fileInput").addEventListener("change",e=>processFile(e.target.files[0]));
+$("dropZone").addEventListener("dragover",e=>{e.preventDefault();$("dropZone").classList.add("drag")});$("dropZone").addEventListener("dragleave",()=>$("dropZone").classList.remove("drag"));$("dropZone").addEventListener("drop",e=>{e.preventDefault();$("dropZone").classList.remove("drag");if(e.dataTransfer.files[0])processFile(e.dataTransfer.files[0])});
+$("searchInput").addEventListener("input",renderHistory);$("clearSearchBtn").addEventListener("click",()=>{$("searchInput").value="";renderHistory();$("searchInput").focus()});
+$("historyList").addEventListener("click",e=>{const b=e.target.closest("button[data-action]");if(!b)return;const {action,id}=b.dataset,c=history.find(x=>x.id===id);if(!c)return;if(action==="load")loadCard(id);if(action==="rename")openRename(id);if(action==="copy")copyText(c.decimal);if(action==="delete"&&confirm(`Delete "${c.name}" from this browser's history?`)){history=history.filter(x=>x.id!==id);persistHistory();renderHistory();if(editingId===id)resetForm();showToast("Card deleted")}});
+$("cancelRenameBtn").addEventListener("click",closeRename);$("confirmRenameBtn").addEventListener("click",confirmRename);$("renameInput").addEventListener("keydown",e=>{if(e.key==="Enter")confirmRename();if(e.key==="Escape")closeRename()});$("renameModal").addEventListener("click",e=>{if(e.target===$("renameModal"))closeRename()});
+$("exportBtn").addEventListener("click",()=>{if(!history.length){showToast("No saved cards to export yet");return}const blob=new Blob([JSON.stringify(history,null,2)],{type:"application/json"}),url=URL.createObjectURL(blob),a=document.createElement("a");a.href=url;a.download="nfc-card-history.json";document.body.appendChild(a);a.click();a.remove();URL.revokeObjectURL(url);showToast("History exported")});
+renderHistory();
+})();
+</script>
 </body>
 </html>
-```
