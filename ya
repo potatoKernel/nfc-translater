@@ -1,0 +1,540 @@
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <title>NFC UID Converter</title>
+
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif;
+      background: linear-gradient(135deg, #0f172a, #1e293b);
+      color: #f8fafc;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 20px;
+    }
+
+    .container {
+      width: 100%;
+      max-width: 650px;
+    }
+
+    .card {
+      background: rgba(15, 23, 42, 0.95);
+      border: 1px solid rgba(148, 163, 184, 0.2);
+      border-radius: 24px;
+      padding: 35px;
+      box-shadow: 0 25px 70px rgba(0, 0, 0, 0.35);
+    }
+
+    h1 {
+      margin: 0 0 8px;
+      font-size: 32px;
+      text-align: center;
+    }
+
+    .subtitle {
+      text-align: center;
+      color: #94a3b8;
+      margin-bottom: 30px;
+      line-height: 1.5;
+    }
+
+    .drop-zone {
+      border: 2px dashed #64748b;
+      border-radius: 18px;
+      padding: 45px 20px;
+      text-align: center;
+      cursor: pointer;
+      transition: 0.2s ease;
+      background: rgba(30, 41, 59, 0.5);
+    }
+
+    .drop-zone:hover,
+    .drop-zone.dragover {
+      border-color: #60a5fa;
+      background: rgba(59, 130, 246, 0.1);
+      transform: scale(1.01);
+    }
+
+    .drop-icon {
+      font-size: 48px;
+      margin-bottom: 12px;
+    }
+
+    .drop-title {
+      font-size: 19px;
+      font-weight: 600;
+      margin-bottom: 8px;
+    }
+
+    .drop-description {
+      color: #94a3b8;
+      font-size: 14px;
+    }
+
+    input[type="file"] {
+      display: none;
+    }
+
+    .result {
+      display: none;
+      margin-top: 25px;
+    }
+
+    .result.show {
+      display: block;
+    }
+
+    .result-box {
+      background: #020617;
+      border: 1px solid #334155;
+      border-radius: 15px;
+      padding: 20px;
+      margin-bottom: 12px;
+    }
+
+    .label {
+      color: #94a3b8;
+      font-size: 13px;
+      margin-bottom: 7px;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+    }
+
+    .value {
+      font-family: "SFMono-Regular", Consolas, monospace;
+      font-size: 22px;
+      word-break: break-all;
+    }
+
+    .decimal-value {
+      font-size: 30px;
+      font-weight: 700;
+      color: #60a5fa;
+    }
+
+    .copy-button {
+      width: 100%;
+      border: 0;
+      border-radius: 12px;
+      padding: 13px;
+      margin-top: 8px;
+      background: #2563eb;
+      color: white;
+      font-size: 16px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: 0.2s;
+    }
+
+    .copy-button:hover {
+      background: #3b82f6;
+    }
+
+    .copy-button:active {
+      transform: scale(0.98);
+    }
+
+    .error {
+      display: none;
+      margin-top: 20px;
+      padding: 15px;
+      border-radius: 12px;
+      background: rgba(239, 68, 68, 0.12);
+      border: 1px solid rgba(239, 68, 68, 0.4);
+      color: #fca5a5;
+      line-height: 1.5;
+    }
+
+    .error.show {
+      display: block;
+    }
+
+    .info {
+      margin-top: 25px;
+      padding: 15px;
+      border-radius: 12px;
+      background: rgba(30, 41, 59, 0.6);
+      color: #94a3b8;
+      font-size: 13px;
+      line-height: 1.6;
+    }
+
+    .info strong {
+      color: #e2e8f0;
+    }
+
+    .footer {
+      text-align: center;
+      margin-top: 20px;
+      color: #64748b;
+      font-size: 12px;
+    }
+
+    @media (max-width: 500px) {
+      .card {
+        padding: 25px 18px;
+      }
+
+      h1 {
+        font-size: 26px;
+      }
+
+      .decimal-value {
+        font-size: 25px;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+  <div class="container">
+
+    <div class="card">
+
+      <h1>🔑 NFC UID Converter</h1>
+
+      <div class="subtitle">
+        Convert a Flipper Zero <code>.nfc</code> file's UID into the
+        decimal identifier automatically.
+      </div>
+
+      <label class="drop-zone" id="dropZone" for="fileInput">
+
+        <div class="drop-icon">📄</div>
+
+        <div class="drop-title">
+          Drop your .nfc file here
+        </div>
+
+        <div class="drop-description">
+          or click to choose a file
+        </div>
+
+      </label>
+
+      <input
+        type="file"
+        id="fileInput"
+        accept=".nfc,text/plain"
+      >
+
+      <div class="error" id="error"></div>
+
+      <div class="result" id="result">
+
+        <div class="result-box">
+          <div class="label">Original UID</div>
+          <div class="value" id="originalUid"></div>
+        </div>
+
+        <div class="result-box">
+          <div class="label">Reversed UID</div>
+          <div class="value" id="reversedUid"></div>
+        </div>
+
+        <div class="result-box">
+          <div class="label">Decimal ID</div>
+          <div class="value decimal-value" id="decimalId"></div>
+
+          <button
+            class="copy-button"
+            id="copyButton"
+            type="button"
+          >
+            Copy Decimal ID
+          </button>
+        </div>
+
+      </div>
+
+      <div class="info">
+        <strong>How it works:</strong><br>
+        This tool finds the <code>UID:</code> line in your Flipper Zero
+        NFC dump, reverses the UID bytes, and converts the result from
+        hexadecimal to decimal.
+        <br><br>
+        <strong>Privacy:</strong> Your file is processed entirely in
+        your browser. Nothing is uploaded to a server.
+      </div>
+
+      <div class="footer">
+        NFC UID Converter • Runs locally in your browser
+      </div>
+
+    </div>
+
+  </div>
+
+  <script>
+    const dropZone = document.getElementById("dropZone");
+    const fileInput = document.getElementById("fileInput");
+
+    const result = document.getElementById("result");
+    const error = document.getElementById("error");
+
+    const originalUid = document.getElementById("originalUid");
+    const reversedUid = document.getElementById("reversedUid");
+    const decimalId = document.getElementById("decimalId");
+
+    const copyButton = document.getElementById("copyButton");
+
+
+    /*
+     * Convert a Flipper Zero UID into the decimal identifier.
+     *
+     * Example:
+     *
+     * UID: 85 B5 E3 FA
+     *
+     * Reverse:
+     *
+     * FA E3 B5 85
+     *
+     * Hex:
+     *
+     * FAE3B585
+     *
+     * Decimal:
+     *
+     * 4209227141
+     */
+    function convertUID(uid) {
+
+      // Remove spaces, tabs, etc.
+      const cleanUID = uid
+        .replace(/\s/g, "")
+        .toUpperCase();
+
+      // This version expects a 4-byte UID.
+      if (!/^[0-9A-F]{8}$/.test(cleanUID)) {
+        throw new Error(
+          "The UID must contain exactly 4 hexadecimal bytes."
+        );
+      }
+
+      // Split into individual bytes.
+      const bytes = [
+        cleanUID.substring(0, 2),
+        cleanUID.substring(2, 4),
+        cleanUID.substring(4, 6),
+        cleanUID.substring(6, 8)
+      ];
+
+      // Reverse the byte order.
+      const reversed = [
+        bytes[3],
+        bytes[2],
+        bytes[1],
+        bytes[0]
+      ].join("");
+
+      // Convert to a JavaScript BigInt so large unsigned
+      // 32-bit values are handled correctly.
+      const decimal = BigInt("0x" + reversed).toString(10);
+
+      return {
+        original: bytes.join(" "),
+        reversed: [
+          bytes[3],
+          bytes[2],
+          bytes[1],
+          bytes[0]
+        ].join(" "),
+        decimal: decimal
+      };
+    }
+
+
+    /*
+     * Read the UID line from a Flipper Zero .nfc file.
+     */
+    function extractUID(text) {
+
+      const lines = text.split(/\r?\n/);
+
+      for (const line of lines) {
+
+        const match = line.match(
+          /^\s*UID\s*:\s*(.+?)\s*$/
+        );
+
+        if (match) {
+          return match[1];
+        }
+      }
+
+      throw new Error(
+        "No UID line was found in this NFC file."
+      );
+    }
+
+
+    /*
+     * Process the selected file.
+     */
+    async function processFile(file) {
+
+      hideError();
+
+      result.classList.remove("show");
+
+      if (!file) {
+        return;
+      }
+
+      try {
+
+        const text = await file.text();
+
+        const uid = extractUID(text);
+
+        const converted = convertUID(uid);
+
+        originalUid.textContent = converted.original;
+
+        reversedUid.textContent = converted.reversed;
+
+        decimalId.textContent = converted.decimal;
+
+        result.classList.add("show");
+
+      } catch (err) {
+
+        showError(
+          err.message ||
+          "Something went wrong while reading the file."
+        );
+      }
+    }
+
+
+    /*
+     * Show an error.
+     */
+    function showError(message) {
+
+      error.textContent = "⚠️ " + message;
+
+      error.classList.add("show");
+    }
+
+
+    /*
+     * Hide the error.
+     */
+    function hideError() {
+
+      error.textContent = "";
+
+      error.classList.remove("show");
+    }
+
+
+    /*
+     * Normal file selection.
+     */
+    fileInput.addEventListener("change", function() {
+
+      if (this.files.length > 0) {
+        processFile(this.files[0]);
+      }
+
+    });
+
+
+    /*
+     * Drag & drop.
+     */
+
+    dropZone.addEventListener("dragover", function(event) {
+
+      event.preventDefault();
+
+      dropZone.classList.add("dragover");
+
+    });
+
+
+    dropZone.addEventListener("dragleave", function() {
+
+      dropZone.classList.remove("dragover");
+
+    });
+
+
+    dropZone.addEventListener("drop", function(event) {
+
+      event.preventDefault();
+
+      dropZone.classList.remove("dragover");
+
+      const files = event.dataTransfer.files;
+
+      if (files.length > 0) {
+        processFile(files[0]);
+      }
+
+    });
+
+
+    /*
+     * Copy the decimal ID.
+     */
+    copyButton.addEventListener("click", async function() {
+
+      const value = decimalId.textContent;
+
+      try {
+
+        await navigator.clipboard.writeText(value);
+
+        const oldText = copyButton.textContent;
+
+        copyButton.textContent = "✓ Copied!";
+
+        setTimeout(function() {
+          copyButton.textContent = oldText;
+        }, 1500);
+
+      } catch (err) {
+
+        // Fallback for browsers where Clipboard API
+        // isn't available.
+        const textarea = document.createElement("textarea");
+
+        textarea.value = value;
+
+        document.body.appendChild(textarea);
+
+        textarea.select();
+
+        document.execCommand("copy");
+
+        textarea.remove();
+
+        copyButton.textContent = "✓ Copied!";
+
+        setTimeout(function() {
+          copyButton.textContent = "Copy Decimal ID";
+        }, 1500);
+      }
+
+    });
+  </script>
+
+</body>
+</html>
+```
