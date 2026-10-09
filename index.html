@@ -3,9 +3,9 @@
 <head>
 <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1"><meta name="theme-color" content="#0b1020">
 <title>NFC Desk — UID Converter</title>
-<!-- Google AdSense: replace ca-pub-XXXXXXXXXXXXXXXX with your approved publisher ID. -->
+<!-- Google AdSense: replace ca-pub-9189748117912436 with your approved publisher ID. -->
 <!-- Uncomment after replacing the publisher ID:
-<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-XXXXXXXXXXXXXXXX" crossorigin="anonymous"></script>
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9189748117912436" crossorigin="anonymous"></script>
 -->
 <style>
 :root{color-scheme:dark;--bg:#0b1020;--panel:#111a2e;--line:#24324b;--muted:#93a4bf;--text:#eef4ff;--accent:#78a9ff;--accent2:#5d8dff;--green:#76e0bb}
@@ -20,7 +20,7 @@
 <div class="ad-container" aria-label="Advertisement">
   <span class="ad-label">Advertisement</span>
   <!-- Uncomment this block after inserting your real publisher ID and ad slot ID.
-  <ins class="adsbygoogle" style="display:block" data-ad-client="ca-pub-XXXXXXXXXXXXXXXX" data-ad-slot="AD_SLOT_ID" data-ad-format="auto" data-full-width-responsive="true"></ins>
+  <ins class="adsbygoogle" style="display:block" data-ad-client="ca-pub-9189748117912436" data-ad-slot="AD_SLOT_ID" data-ad-format="auto" data-full-width-responsive="true"></ins>
   <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
   -->
   <span>Ad space — connect your approved Google AdSense account to display ads.</span>
@@ -31,7 +31,7 @@
 <label class="dropzone" id="dropZone" for="fileInput"><div class="dropicon">⇧</div><strong>Drop your .nfc file here</strong><span>or click to browse your files</span></label><input id="fileInput" type="file" accept=".nfc,text/plain">
 <div class="manual"><label class="label" for="uidInput">UID (4 bytes)</label><div class="manual-row"><input class="input" id="uidInput" type="text" placeholder="6C 2D A9 41" autocomplete="off" spellcheck="false"><button class="btn" id="convertBtn" type="button">Convert</button></div><p class="hint">Paste a 4-byte UID, with or without spaces. This converter uses reversed byte order.</p></div>
 <div class="error" id="errorBox" role="alert"></div>
-<div class="result" id="result"><div class="result-top"><div><h3>Conversion result</h3><small id="sourceLabel">UID ready</small></div><span class="pill">Ready to save</span></div><div class="result-grid"><div class="value-card"><div class="value-label">Original UID</div><div class="value" id="originalValue">—</div></div><div class="value-card"><div class="value-label">Reversed UID</div><div class="value" id="reversedValue">—</div></div><div class="value-card wide"><div class="value-label">NFC code</div><div class="value-line"><div class="value big" id="decimalValue">—</div><button class="copy-mini" id="copyDecimalBtn" type="button">Copy</button></div></div></div><div class="save-row"><input class="input" id="cardNameInput" type="text" maxlength="80" placeholder="Card name (e.g. Library card)"><button class="btn primary" id="saveCardBtn" type="button">Save card</button></div><p class="hint">Saving adds this card to the history on this browser. You can rename it later.</p></div>
+<div class="result" id="result"><div class="result-top"><div><h3>Conversion result</h3><small id="sourceLabel">UID ready</small></div><span class="pill">Ready to save</span></div><div class="result-grid"><div class="value-card"><div class="value-label">Original UID</div><div class="value" id="originalValue">—</div></div><div class="value-card"><div class="value-label">Reversed UID</div><div class="value" id="reversedValue">—</div></div><div class="value-card wide"><div class="value-label">Decimal ID</div><div class="value-line"><div class="value big" id="decimalValue">—</div><button class="copy-mini" id="copyDecimalBtn" type="button">Copy</button></div></div></div><div class="save-row"><input class="input" id="cardNameInput" type="text" maxlength="80" placeholder="Card name (e.g. Library card)"><button class="btn primary" id="saveCardBtn" type="button">Save card</button></div><p class="hint">Saving adds this card to the history on this browser. You can rename it later.</p></div>
 </section>
 <section class="panel history-panel"><div class="panel-head"><div><h3>Card history</h3><p id="historyCount">0 saved cards</p></div><button class="btn subtle" id="clearSearchBtn" type="button" title="Clear search">Clear</button></div><div class="search"><span class="search-icon">⌕</span><input class="input" id="searchInput" type="search" placeholder="Search names or UIDs…" aria-label="Search card history"></div><div class="history-list" id="historyList"></div></section>
 </main><footer class="footer"><span>Runs in your browser · No account required</span><span>History is stored on this device and browser.</span></footer>
